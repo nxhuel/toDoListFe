@@ -1,0 +1,67 @@
+.accordion-button:not(.collapsed) {
+  color: black;
+  background-color: #ffc10771;
+}
+
+.accordion-button {
+  background-color: #f8f9fa;
+  color: black;
+  border-left: 5px solid #ffc107;
+}
+
+.accordion-button::after {
+  filter: brightness(0); /* hace que se vea negra */
+}
+
+.accordion-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+  outline: none;
+}
+
+.accordion-body {
+  border-left: 5px solid #ffc107;
+}
+
+.btn-trigger-personality {
+  background: radial-gradient(circle at top left, #2a9d8f, #4caf50 70%);
+  border: none !important;
+  transition: background-color 0.3s ease;
+}
+
+.btn-trigger-personality:hover {
+  background: radial-gradient(circle at top left, #1a635a, #4caf50 70%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bg-description {
+  background-color: #e3e3e4a1 !important;
+  border-radius: 0.25rem; 
+  padding: 0.5rem;
+  color: #333; 
+}
+
+// dark mode styles
+
+html[data-bs-theme="dark"] .bg-white {
+  background-color: #1f1f1f !important;
+  color: #e0e0e0 !important;
+}
+
+html[data-bs-theme="dark"] .accordion-button:not(.collapsed) {
+  color: #e0e0e0 !important;
+  background-color: #ffbf00a8 !important;
+}
+
+html[data-bs-theme="dark"] .accordion-button {
+  background-color: #2c2c2c !important;
+  color: #e0e0e0 !important;
+  border-left: 5px solid #ffc107;
+}
+
+html[data-bs-theme="dark"] .accordion-button::after {
+  filter: brightness(2);
+}

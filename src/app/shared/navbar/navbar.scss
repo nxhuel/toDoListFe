@@ -1,0 +1,25 @@
+.navbar {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.img-container {
+    width: 2rem; /* Adjust the size as needed */
+    height: 2rem; /* Adjust the size as needed */
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ensures the image covers the container without distortion */
+    }
+}
+
+.bg-light {
+    background-color: #f8f9fa !important; /* Ensures the background color is light */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
+}
+
+html[data-bs-theme="dark"] .bg-light {
+    background-color: #343a40 !important; /* Dark mode background */
+    color: #e0e0e0 !important; /* Light text color for contrast */
+}

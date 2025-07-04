@@ -1,0 +1,312 @@
+<main class="pt-5 pb-5">
+  <div class="pt-2 d-flex flex-row justify-content-between align-items-center">
+    <div class="left">
+      <h2 class="fw-bold">Mis Tareas</h2>
+      <p class=""><em>Aquí puedes ver y gestionar todas tus tareas.</em></p>
+    </div>
+    <div class="right">
+      <!-- Button trigger modal -->
+      <button
+        type="button"
+        class="btn btn-primary btn-trigger-personality"
+        data-bs-toggle="modal"
+        data-bs-target="#formModal"
+      >
+        + Nueva Tarea
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <section class="pt-3 pb-3">
+    <form
+      action=""
+      class="bg-white pt-3 pb-3 ms-1 me-1 ps-2 pe-2 rounded border row"
+    >
+      <label for="exampleDataList" class="form-label"
+        ><strong>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-funnel"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z"
+            />
+          </svg>
+
+          Filtros
+        </strong>
+      </label>
+      <div class="col-md-4">
+        <input
+          type="text"
+          class="form-control"
+          id="searchTask"
+          [(ngModel)]="searchText"
+          name="search"
+          placeholder="Buscar tareas..."
+        />
+      </div>
+      <div class="col-md-4">
+        <select
+          id="status"
+          class="form-select"
+          [(ngModel)]="selectedStatus"
+          name="status"
+        >
+          <option value="Todas">📋 Todas</option>
+          <option value="Pendientes">⏳ Pendientes</option>
+          <option value="Completadas">✅ Completadas</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <select
+          id="priority"
+          class="form-select"
+          [(ngModel)]="selectedPriority"
+          name="priority"
+        >
+          <option value="Todas las prioridades">
+            🎯 Todas las prioridades
+          </option>
+          <option value="🔴 Alta">🔴 Alta</option>
+          <option value="🟠 Media">🟠 Media</option>
+          <option value="🟢 Baja">🟢 Baja</option>
+        </select>
+      </div>
+    </form>
+  </section>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="formModal"
+    tabindex="-1"
+    aria-labelledby="formModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="formModalLabel">Nueva Tarea</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <app-task-form></app-task-form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="pt-2">
+    <div class="accordion" id="accordionExample">
+      @for (task of filteredTasks; track $index) {
+      <div class="accordion-item mb-4">
+        <h2 class="accordion-header" [id]="'heading' + $index">
+          <button
+            class="accordion-button"
+            type="button"
+            data-bs-toggle="collapse"
+            [attr.data-bs-target]="'#collapse' + $index"
+            aria-expanded="true"
+            [attr.aria-controls]="'collapseOne' + $index"
+          >
+            <div class="d-flex flex-row w-100 pe-4 justify-content-between">
+              <div
+                class="card-header-container d-flex flex-row gap-2 align-items-center"
+              >
+                <div class="checkbox-container h-100">
+                  <input type="checkbox" class="form-check-input" />
+                </div>
+                <div class="title-container">
+                  <h5>{{task.title}}</h5>
+                  <div class="description-container d-flex flex-row gap-2 ps-2">
+                    <p class="badge bg-warning d-flex align-items-center gap-1">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        class="bi bi-clock"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"
+                        />
+                        <path
+                          d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"
+                        />
+                      </svg>
+                      {{task.priority}}
+                    </p>
+                    @for (tag of task.tags; track $index) {
+                    <p class="badge bg-white text-dark">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-tag"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0"
+                        />
+                        <path
+                          d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z"
+                        />
+                      </svg>
+                      {{tag}}
+                    </p>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="btn-container d-flex flex-row gap-2 align-items-center"
+              >
+                <button class="btn btn-sm">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-pencil-square"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  class="btn btn-sm text-danger"
+                  (click)="deleteTask($index)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-trash"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
+                    />
+                    <path
+                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </button>
+        </h2>
+        <div
+          [id]="'collapse' + $index"
+          class="accordion-collapse collapse show"
+          [attr.aria-labelledby]="'heading' + $index"
+        >
+          <div class="accordion-body">
+            <div class="descripcion-body-container">
+              <strong>Descripción</strong>
+              <p class="p-2 bg-light bg-description text-muted">{{task.description}}.</p>
+            </div>
+
+            <div
+              class="date-body-container w-50 d-flex flex-row justify-content-between pt-2 pb-2"
+            >
+              <div class="date-body-left">
+                <p>
+                  <em>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-calendar"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"
+                      />
+                    </svg>
+                    Creada:
+                    <strong>{{task.createdAt | date : 'short'}}</strong>
+                  </em>
+                </p>
+                <p>
+                  <em>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-clock"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"
+                      />
+                      <path
+                        d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"
+                      />
+                    </svg>
+                    Actualizada:
+                    <strong>{{task.createdAt | date : 'short'}}</strong>
+                  </em>
+                </p>
+              </div>
+              <div class="date-body-right">
+                <p>Estado: <strong>{{task.completed}}</strong></p>
+              </div>
+            </div>
+
+            <div class="tags-body-container">
+              <strong>Etiquetas</strong>
+              <div class="d-flex flex-row gap-2 pt-2">
+                @for (tag of task.tags; track $index) {
+
+                <p class="badge bg-white text-dark">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-tag"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0"
+                    />
+                    <path
+                      d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z"
+                    />
+                  </svg>
+                  {{tag}}
+                </p>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </section>
+</main>

@@ -1,1 +1,39 @@
+@import "./app/shared/header/header.scss";
+@import "./app/shared/navbar/navbar.scss";
+@import "./app/shared/footer/footer.scss";
+@import "./app/pages/task-list/task-list.scss";
+@import "./app/pages/home/home.scss";
+
 /* You can add global styles to this file, and also import other style files */
+
+body {
+  font-family: "Inter", sans-serif;
+  background: radial-gradient(circle at top left, #f2fcff, #fefcff 70%);
+}
+
+// Sacando estilos de Bootstrap
+p {
+  margin-bottom: 0;
+}
+
+// light mode
+[data-bs-theme="light"] {
+  .dropdown-menu {
+    --bs-dropdown-link-active-bg: rgba(0, 0, 0, 0.685);
+  }
+}
+
+// dark mode
+
+[data-bs-theme="dark"] {
+  --bs-body-bg: #121212;
+  --bs-body-color: #e0e0e0;
+
+  body {
+    background: radial-gradient(circle at top left, #121212, #1f1f1f 90%);
+  }
+
+  .dropdown-menu {
+    --bs-dropdown-link-active-bg: rgba(148, 147, 147, 0.685);
+  }
+}
