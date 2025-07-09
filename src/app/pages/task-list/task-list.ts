@@ -1,5 +1,11 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { TaskForm } from '../../components/task-form/task-form';
 import { FormsModule, NgModel } from '@angular/forms';
 
@@ -9,7 +15,7 @@ import { FormsModule, NgModel } from '@angular/forms';
   templateUrl: './task-list.html',
   styleUrl: './task-list.scss',
 })
-export class TaskList {
+export class TaskList implements OnInit {
   tasks = [
     {
       title: 'Task 1',
@@ -63,7 +69,13 @@ export class TaskList {
     },
   ];
 
-  constructor() {}
+  isDarkMode!: boolean;
+
+  ngOnInit() {
+    this.isDarkMode = document.body.classList.contains('dark-mode');
+  }
+
+  constructor(private renderer2: Renderer2) {}
 
   searchText: string = '';
   selectedStatus: string = 'Todas';
@@ -94,7 +106,86 @@ export class TaskList {
     task.completed = !task.completed;
   }
 
+  // udpate task
+  get isEditing(): boolean {
+    return !!this.selectedTask;
+  }
+
+  selectedTask: any = null;
+
+  editTask(task: any) {
+    this.selectedTask = task;
+  }
+
+  handleFormSubmit(taskData: any) {
+    if (taskData.id) {
+      // lógica de actualización
+      console.log('Editar tarea:', taskData);
+    } else {
+      // lógica de nueva creación
+      console.log('Nueva tarea:', taskData);
+    }
+
+    // Reiniciar form
+    this.selectedTask = null;
+  }
+
+  // delete task
   deleteTask(index: number): void {
     alert('Esta funcionalidad aún no está implementada.');
   }
+
+  @ViewChild('titleCheck') titleCheck!: ElementRef;
+  isChecked: boolean = false;
+
+  eventCheck(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    const titleElement = checkbox
+      .closest('.card-header-container')
+      ?.querySelector('h5');
+
+    if (!titleElement) return;
+
+    const isChecked = checkbox.checked;
+
+    if (isChecked) {
+      this.renderer2.setStyle(titleElement, 'text-decoration', 'line-through');
+      this.renderer2.addClass(titleElement, 'title-checked');
+    } else {
+      this.renderer2.setStyle(titleElement, 'text-decoration', 'none');
+      this.renderer2.removeClass(titleElement, 'title-checked');
+    }
+  }
+
+  // test
+  // @ViewChild('myButton') myButtonInTS!: ElementRef;
+  // @ViewChild('myText') myTextInTS!: ElementRef;
+
+  // isBlack: boolean = false;
+
+  // public changeColor() {
+  //   const myButton = this.myButtonInTS.nativeElement;
+  //   const myText = this.myTextInTS.nativeElement;
+
+  //   if (this.isBlack) {
+  //     this.renderer2.setStyle(myButton, 'backgroundColor', 'yellow');
+  //     this.renderer2.setStyle(myButton, 'color', 'black');
+  //     this.renderer2.setProperty(
+  //       myText,
+  //       'innerHTML',
+  //       'El botón es de color amarillo'
+  //     );
+  //   } else {
+  //     this.renderer2.setStyle(myButton, 'backgroundColor', 'black');
+  //     this.renderer2.setStyle(myButton, 'color', 'white');
+  //     this.renderer2.setProperty(
+  //       myText,
+  //       'innerHTML',
+  //       'El botón es de color negro'
+  //     );
+  //   }
+  //   this.isBlack = !this.isBlack;
+  // }
+
+  // finish test
 }

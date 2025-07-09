@@ -92,16 +92,22 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="formModalLabel">Nueva Tarea</h5>
+          <h5 class="modal-title" id="formModalLabel">
+            {{ selectedTask ? 'Editar Tarea' : 'Nueva Tarea' }}
+          </h5>
           <button
             type="button"
             class="btn-close"
             data-bs-dismiss="modal"
             aria-label="Close"
+            (click)="selectedTask = null"
           ></button>
         </div>
         <div class="modal-body">
-          <app-task-form></app-task-form>
+          <app-task-form
+            [taskToEdit]="selectedTask"
+            (formSubmitted)="handleFormSubmit($event)"
+          ></app-task-form>
         </div>
       </div>
     </div>
@@ -125,10 +131,14 @@
                 class="card-header-container d-flex flex-row gap-2 align-items-center"
               >
                 <div class="checkbox-container h-100">
-                  <input type="checkbox" class="form-check-input" />
+                  <input
+                    type="checkbox"
+                    (click)="eventCheck($event)"
+                    class="form-check-input"
+                  />
                 </div>
                 <div class="title-container">
-                  <h5>{{task.title}}</h5>
+                  <h5 class="fw-bold" #titleCheck>{{task.title}}</h5>
                   <div class="description-container d-flex flex-row gap-2 ps-2">
                     <p class="badge bg-warning d-flex align-items-center gap-1">
                       <svg
@@ -175,7 +185,14 @@
               <div
                 class="btn-container d-flex flex-row gap-2 align-items-center"
               >
-                <button class="btn btn-sm">
+                <!-- edit method -->
+                <button
+                  type="button"
+                  class="btn btn-sm"
+                  data-bs-toggle="modal"
+                  data-bs-target="#formModal"
+                  (click)="editTask(task )"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -193,6 +210,8 @@
                     />
                   </svg>
                 </button>
+
+                <!-- delete method -->
                 <button
                   class="btn btn-sm text-danger"
                   (click)="deleteTask($index)"
@@ -225,7 +244,9 @@
           <div class="accordion-body">
             <div class="descripcion-body-container">
               <strong>Descripción</strong>
-              <p class="p-2 bg-light bg-description text-muted">{{task.description}}.</p>
+              <p class="p-2 bg-light bg-description text-muted">
+                {{task.description}}.
+              </p>
             </div>
 
             <div

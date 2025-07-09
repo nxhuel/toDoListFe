@@ -24,7 +24,7 @@ export class Navbar implements OnInit {
   }
 
   toggleThemeDropdown(event: Event) {
-    event.preventDefault(); // evitar que el enlace navegue
+    event.preventDefault(); 
     this.isDark = !this.isDark;
     const theme = this.isDark ? 'dark' : 'light';
     document.documentElement.setAttribute('data-bs-theme', theme);

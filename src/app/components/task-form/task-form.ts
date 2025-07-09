@@ -1,5 +1,12 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -7,6 +14,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { SaveTask, Task } from '../../interfaces/task';
 
 @Component({
   selector: 'app-task-form',
@@ -14,7 +22,28 @@ import {
   templateUrl: './task-form.html',
   styleUrl: './task-form.scss',
 })
-export class TaskForm {
+export class TaskForm implements OnChanges {
+  @Input() taskToEdit?: SaveTask;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['taskToEdit'] && this.taskToEdit) {
+      this.fillForm(this.taskToEdit);
+    }
+  }
+
+  fillForm(task: any): void {
+    this.taskForm.patchValue({
+      title: task.title,
+      description: task.description,
+      completed: task.completed,
+      createdAt: task.createdAt,
+      updatedAt: task.updatedAt,
+      dueDate: task.dueDate,
+      priority: task.priority,
+      tags: task.tags || [],
+    });
+  }
+
   today: Date = new Date();
   minDate: string = this.today.toISOString().split('T')[0]; // Format YYYY-MM-DD
 
@@ -53,8 +82,17 @@ export class TaskForm {
     });
   }
 
+  @Output() formSubmitted = new EventEmitter<any>();
+
   onSubmit() {
     if (this.taskForm.valid) {
+      const taskData = this.taskForm.value;
+
+      if (this.taskToEdit) {
+        taskData.id = this.taskToEdit.id; // si necesitás el ID
+      }
+
+      this.formSubmitted.emit(taskData);
       console.log('Form Submitted!', this.taskForm.value);
     } else {
       console.log('Form not valid');
@@ -80,5 +118,10 @@ export class TaskForm {
     const currentTags = this.tags.value as string[];
     const updatedTags = currentTags.filter((tag) => tag !== tagToRemove);
     this.tags.setValue(updatedTags);
+  }
+
+  resetForm() {
+    this.taskForm.reset();
+    this.tags.setValue([]);
   }
 }

@@ -39,9 +39,26 @@
 
 .bg-description {
   background-color: #e3e3e4a1 !important;
-  border-radius: 0.25rem; 
+  border-radius: 0.25rem;
   padding: 0.5rem;
-  color: #333; 
+  color: #333;
+}
+
+.checkbox-container {
+  .form-check-input {
+    border-radius: 0.25rem;
+    border: 1px solid #1f1f1f;
+  }
+
+  .form-check-input:checked {
+    background-color: #0bed3f;
+    border-color: #0bed3f;
+  }
+}
+
+.title-checked {
+  color: gray;
+  text-decoration: line-through;
 }
 
 // dark mode styles
@@ -64,4 +81,9 @@ html[data-bs-theme="dark"] .accordion-button {
 
 html[data-bs-theme="dark"] .accordion-button::after {
   filter: brightness(2);
+}
+
+html[data-bs-theme="dark"] .title-checked {
+  color: rgb(177, 177, 177) !important;
+  text-decoration: line-through;
 }
