@@ -8,6 +8,8 @@ import {
 } from '@angular/core';
 import { TaskForm } from '../../components/task-form/task-form';
 import { FormsModule, NgModel } from '@angular/forms';
+import { TaskService } from '../../services/task-service';
+import { Task } from '../../interfaces/task';
 
 @Component({
   selector: 'app-task-list',
@@ -16,7 +18,7 @@ import { FormsModule, NgModel } from '@angular/forms';
   styleUrl: './task-list.scss',
 })
 export class TaskList implements OnInit {
-  tasks = [
+  tasksTest = [
     {
       title: 'Task 1',
       description: 'Description for Task 1',
@@ -71,17 +73,32 @@ export class TaskList implements OnInit {
 
   isDarkMode!: boolean;
 
+  tasks: Task[] = [];
+  totalCount: number = 0;
+
+  constructor(private renderer2: Renderer2, private taskService: TaskService) {}
+
   ngOnInit() {
     this.isDarkMode = document.body.classList.contains('dark-mode');
+
+    this.getTasks();
   }
 
-  constructor(private renderer2: Renderer2) {}
+  getTasks(): void {
+    this.taskService.getTasks().subscribe((response) => {
+      console.log('Tasks fetched:', response);
+      this.tasks = response.items;
+      this.totalCount = response.totalCount;
+    });
+  }
 
   searchText: string = '';
   selectedStatus: string = 'Todas';
   selectedPriority: string = 'Todas las prioridades';
 
   get filteredTasks() {
+    if (!this.tasks) return [];
+
     return this.tasks.filter((task) => {
       const matchText = task.title
         .toLowerCase()
@@ -94,9 +111,9 @@ export class TaskList implements OnInit {
 
       const matchPriority =
         this.selectedPriority === 'Todas las prioridades' ||
-        (this.selectedPriority === '🔴 Alta' && task.priority === 'high') ||
-        (this.selectedPriority === '🟠 Media' && task.priority === 'medium') ||
-        (this.selectedPriority === '🟢 Baja' && task.priority === 'low');
+        (this.selectedPriority === '🔴 Alta' && task.priority === 'High') ||
+        (this.selectedPriority === '🟠 Media' && task.priority === 'Medium') ||
+        (this.selectedPriority === '🟢 Baja' && task.priority === 'Low');
 
       return matchText && matchStatus && matchPriority;
     });
@@ -156,36 +173,4 @@ export class TaskList implements OnInit {
       this.renderer2.removeClass(titleElement, 'title-checked');
     }
   }
-
-  // test
-  // @ViewChild('myButton') myButtonInTS!: ElementRef;
-  // @ViewChild('myText') myTextInTS!: ElementRef;
-
-  // isBlack: boolean = false;
-
-  // public changeColor() {
-  //   const myButton = this.myButtonInTS.nativeElement;
-  //   const myText = this.myTextInTS.nativeElement;
-
-  //   if (this.isBlack) {
-  //     this.renderer2.setStyle(myButton, 'backgroundColor', 'yellow');
-  //     this.renderer2.setStyle(myButton, 'color', 'black');
-  //     this.renderer2.setProperty(
-  //       myText,
-  //       'innerHTML',
-  //       'El botón es de color amarillo'
-  //     );
-  //   } else {
-  //     this.renderer2.setStyle(myButton, 'backgroundColor', 'black');
-  //     this.renderer2.setStyle(myButton, 'color', 'white');
-  //     this.renderer2.setProperty(
-  //       myText,
-  //       'innerHTML',
-  //       'El botón es de color negro'
-  //     );
-  //   }
-  //   this.isBlack = !this.isBlack;
-  // }
-
-  // finish test
 }

@@ -1,12 +1,49 @@
-.accordion-button:not(.collapsed) {
+// priority: high
+.accordion-button-high:not(.collapsed) {
+  color: black;
+  background-color: #ff070771;
+}
+
+.accordion-button-high {
+  background-color: #f8f9fa;
+  color: black;
+  border-left: 5px solid #ff0707;
+}
+
+.accordion-body-high {
+  border-left: 5px solid #ff0707;
+}
+
+// priority: medium
+.accordion-button-medium:not(.collapsed) {
   color: black;
   background-color: #ffc10771;
 }
 
-.accordion-button {
+.accordion-button-medium {
   background-color: #f8f9fa;
   color: black;
   border-left: 5px solid #ffc107;
+}
+
+.accordion-body-medium {
+  border-left: 5px solid #ffc107;
+}
+
+// priority: low
+.accordion-button-low:not(.collapsed) {
+  color: black;
+  background-color: #07ff3071;
+}
+
+.accordion-button-low {
+  background-color: #f8f9fa;
+  color: black;
+  border-left: 5px solid #07ff13;
+}
+
+.accordion-body-low {
+  border-left: 5px solid #1cff07;
 }
 
 .accordion-button::after {
@@ -20,10 +57,6 @@
 .accordion-button:focus {
   box-shadow: none;
   outline: none;
-}
-
-.accordion-body {
-  border-left: 5px solid #ffc107;
 }
 
 .btn-trigger-personality {
@@ -68,15 +101,45 @@ html[data-bs-theme="dark"] .bg-white {
   color: #e0e0e0 !important;
 }
 
-html[data-bs-theme="dark"] .accordion-button:not(.collapsed) {
+// Priority: High
+html[data-bs-theme="dark"] .accordion-button-high:not(.collapsed) {
+  color: #e0e0e0 !important;
+  background-color: #ff070771 !important;
+}
+html[data-bs-theme="dark"] .accordion-button-high {
+  background-color: #2c2c2c !important;
+  color: #e0e0e0 !important;
+  border-left: 5px solid #ff0707;
+}
+html[data-bs-theme="dark"] .accordion-body-high {
+  border-left: 5px solid #ff0707;
+}
+
+// Priority: Medium
+html[data-bs-theme="dark"] .accordion-button-medium:not(.collapsed) {
   color: #e0e0e0 !important;
   background-color: #ffbf00a8 !important;
 }
 
-html[data-bs-theme="dark"] .accordion-button {
+html[data-bs-theme="dark"] .accordion-button-medium {
   background-color: #2c2c2c !important;
   color: #e0e0e0 !important;
   border-left: 5px solid #ffc107;
+}
+
+// Priority: Low
+html[data-bs-theme="dark"] .accordion-button-low:not(.collapsed) {
+  color: #e0e0e0 !important;
+  background-color: #07ff3071 !important;
+}
+html[data-bs-theme="dark"] .accordion-button-low {
+  background-color: #2c2c2c !important;
+  color: #e0e0e0 !important;
+  border-left: 5px solid #07ff13;
+}
+
+html[data-bs-theme="dark"] .accordion-body-low {
+  border-left: 5px solid #1cff07;
 }
 
 html[data-bs-theme="dark"] .accordion-button::after {

@@ -120,6 +120,11 @@
         <h2 class="accordion-header" [id]="'heading' + $index">
           <button
             class="accordion-button"
+            [ngClass]="{
+              'accordion-button-high': task.priority === 'High',
+              'accordion-button-low': task.priority === 'Low',
+              'accordion-button-medium': task.priority === 'Medium',
+            }"
             type="button"
             data-bs-toggle="collapse"
             [attr.data-bs-target]="'#collapse' + $index"
@@ -140,7 +145,13 @@
                 <div class="title-container">
                   <h5 class="fw-bold" #titleCheck>{{task.title}}</h5>
                   <div class="description-container d-flex flex-row gap-2 ps-2">
-                    <p class="badge bg-warning d-flex align-items-center gap-1">
+                    <p class="badge d-flex align-items-center gap-1"
+                    [ngClass]="{
+                      'bg-danger': task.priority === 'High',
+                      'bg-warning': task.priority === 'Medium',
+                      'bg-success': task.priority === 'Low'
+                    }"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="12"
@@ -241,7 +252,14 @@
           class="accordion-collapse collapse show"
           [attr.aria-labelledby]="'heading' + $index"
         >
-          <div class="accordion-body">
+          <div 
+          class="accordion-body"
+          [ngClass]="{
+            'accordion-body-high': task.priority === 'High',
+            'accordion-body-low': task.priority === 'Low',
+            'accordion-body-medium': task.priority === 'Medium',
+          }"
+          >
             <div class="descripcion-body-container">
               <strong>Descripción</strong>
               <p class="p-2 bg-light bg-description text-muted">
@@ -294,7 +312,12 @@
                 </p>
               </div>
               <div class="date-body-right">
-                <p>Estado: <strong>{{task.completed}}</strong></p>
+                <p>Estado: 
+                  <strong>
+                    {{task.completed ? 'Completada' : 'Pendiente'}}
+
+                  </strong>
+                </p>
               </div>
             </div>
 
