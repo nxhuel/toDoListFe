@@ -1,5 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnInit,
@@ -9,7 +10,7 @@ import {
 import { TaskForm } from '../../components/task-form/task-form';
 import { FormsModule, NgModel } from '@angular/forms';
 import { TaskService } from '../../services/task-service';
-import { Task } from '../../interfaces/task';
+import { SaveTask, Task } from '../../interfaces/task';
 
 @Component({
   selector: 'app-task-list',
@@ -18,65 +19,16 @@ import { Task } from '../../interfaces/task';
   styleUrl: './task-list.scss',
 })
 export class TaskList implements OnInit {
-  tasksTest = [
-    {
-      title: 'Task 1',
-      description: 'Description for Task 1',
-      completed: false,
-      createdAt: '2025-06-22',
-      updatedAt: '2025-06-25',
-      dueDate: '2025-08-22',
-      priority: 'medium',
-      tags: ['work', 'urgent'],
-    },
-    {
-      title: 'Task 2',
-      description: 'Description for Task 2',
-      completed: true,
-      createdAt: '2025-04-06',
-      updatedAt: '',
-      dueDate: '2025-05-12',
-      priority: 'low',
-      tags: ['personal'],
-    },
-    {
-      title: 'Task 3',
-      description: 'Description for Task 3',
-      completed: true,
-      createdAt: '2025-04-06',
-      updatedAt: '',
-      dueDate: '2025-05-12',
-      priority: 'low',
-      tags: ['personal'],
-    },
-    {
-      title: 'Task 4',
-      description: 'Description for Task 4',
-      completed: true,
-      createdAt: '2025-04-06',
-      updatedAt: '',
-      dueDate: '2025-05-12',
-      priority: 'low',
-      tags: ['personal'],
-    },
-    {
-      title: 'Task 5',
-      description: 'Description for Task 5',
-      completed: true,
-      createdAt: '2025-04-06',
-      updatedAt: '',
-      dueDate: '2025-05-12',
-      priority: 'low',
-      tags: ['personal'],
-    },
-  ];
-
   isDarkMode!: boolean;
 
   tasks: Task[] = [];
   totalCount: number = 0;
 
-  constructor(private renderer2: Renderer2, private taskService: TaskService) {}
+  constructor(
+    private renderer2: Renderer2,
+    private taskService: TaskService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.isDarkMode = document.body.classList.contains('dark-mode');
@@ -119,37 +71,76 @@ export class TaskList implements OnInit {
     });
   }
 
-  toggleTaskCompletion(task: any): void {
-    task.completed = !task.completed;
+  // change completed
+  toggleCompletion(task: Task, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const isCompleted = input.checked;
+
+    task.completed = isCompleted;
+
+    const updatedTask: SaveTask = {
+      taskId: task.taskId,
+      title: task.title,
+      description: task.description,
+      completed: isCompleted,
+      dueDate: task.dueDate,
+      priority: task.priority,
+      tags: task.tags,
+    };
+
+    this.taskService.editTask(updatedTask).subscribe({
+      next: () => {
+        this.getTasks();
+      },
+      error: (err) => {
+        console.error('Error actualizando estado:', err);
+        task.completed = !isCompleted;
+      },
+    });
   }
 
   // udpate task
-  get isEditing(): boolean {
-    return !!this.selectedTask;
+  // get isEditing(): boolean {
+  //   return !!this.selectedTask;
+  // }
+
+  selectedTask?: Task;
+  // selectedTask?: SaveTask;
+
+  editTask(task: Task): void {
+    this.selectedTask = { ...task };
   }
 
-  selectedTask: any = null;
-
-  editTask(task: any) {
-    this.selectedTask = task;
-  }
-
-  handleFormSubmit(taskData: any) {
-    if (taskData.id) {
-      // lógica de actualización
+  // al componente taskForm -> post / put
+  handleFormSubmit(taskData: Task): void {
+    if (taskData.taskId) {
       console.log('Editar tarea:', taskData);
+      this.taskService.editTask(taskData).subscribe(() => {
+        this.getTasks();
+        this.selectedTask = undefined;
+      });
     } else {
       // lógica de nueva creación
       console.log('Nueva tarea:', taskData);
+      this.taskService.saveTask(taskData).subscribe(() => {
+        this.getTasks();
+        this.selectedTask = undefined;
+      });
     }
 
     // Reiniciar form
-    this.selectedTask = null;
+    // this.selectedTask == null;
   }
 
   // delete task
-  deleteTask(index: number): void {
-    alert('Esta funcionalidad aún no está implementada.');
+  deleteTask(task: Task): void {
+    console.log('Tarea a eliminar:', task); // asegurate que tenga taskId
+
+    this.taskService.deleteTask(task.taskId).subscribe(() => {
+      this.getTasks();
+      alert('Tarea eliminada con éxito.');
+      this.cdr.detectChanges(); // Forzar redibujo
+    });
   }
 
   @ViewChild('titleCheck') titleCheck!: ElementRef;

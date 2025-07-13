@@ -26,6 +26,8 @@ export class TaskForm implements OnChanges {
   @Input() taskToEdit?: SaveTask;
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('Changes:', changes);
+
     if (changes['taskToEdit'] && this.taskToEdit) {
       this.fillForm(this.taskToEdit);
     }
@@ -33,11 +35,10 @@ export class TaskForm implements OnChanges {
 
   fillForm(task: any): void {
     this.taskForm.patchValue({
+      taskId: task.taskId,
       title: task.title,
       description: task.description,
       completed: task.completed,
-      createdAt: task.createdAt,
-      updatedAt: task.updatedAt,
       dueDate: task.dueDate,
       priority: task.priority,
       tags: task.tags || [],
@@ -51,8 +52,6 @@ export class TaskForm implements OnChanges {
   title: FormControl;
   description: FormControl;
   completed: FormControl;
-  createdAt: FormControl;
-  updatedAt: FormControl;
   dueDate: FormControl;
   priority: FormControl;
   tags: FormControl;
@@ -64,18 +63,15 @@ export class TaskForm implements OnChanges {
     ]);
     this.description = new FormControl('');
     this.completed = new FormControl(false, Validators.required);
-    this.createdAt = new FormControl(new Date());
-    this.updatedAt = new FormControl(new Date());
     this.dueDate = new FormControl(null, Validators.required);
-    this.priority = new FormControl('medium', Validators.required);
+    this.priority = new FormControl('Medium', Validators.required);
     this.tags = new FormControl([]);
 
     this.taskForm = new FormGroup({
+      taskId: new FormControl(null),
       title: this.title,
       description: this.description,
       completed: this.completed,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
       dueDate: this.dueDate,
       priority: this.priority,
       tags: this.tags,
@@ -87,13 +83,11 @@ export class TaskForm implements OnChanges {
   onSubmit() {
     if (this.taskForm.valid) {
       const taskData = this.taskForm.value;
-
-      if (this.taskToEdit) {
-        taskData.id = this.taskToEdit.id; // si necesitás el ID
-      }
-
-      this.formSubmitted.emit(taskData);
+      console.log('ID en el form:', this.taskForm.get('taskId')?.value);
       console.log('Form Submitted!', this.taskForm.value);
+      
+      this.formSubmitted.emit({ ...taskData });
+      // this.resetForm();
     } else {
       console.log('Form not valid');
     }

@@ -29,9 +29,9 @@
     <fieldset class="col">
       <label for="priority" class="form-label fw-bolder">Prioridad</label>
       <select id="priority" class="form-select" formControlName="priority">
-        <option>🟢 Baja</option>
-        <option selected>🟡 Media</option>
-        <option>🔴 Alta</option>
+        <option [value]="'Low'">🟢 Baja</option>
+        <option [value]="'Medium'" selected>🟡 Media</option>
+        <option [value]="'High'">🔴 Alta</option>
       </select>
     </fieldset>
 
@@ -69,7 +69,7 @@
     </div>
     <div class="pt-2 gap-2 d-flex flex-wrap">
       @for (tag of tags.value; track $index) {
-      <p class="badge bg-secondary h-100 d-inline-flex align-items-center   ">
+      <p class="badge bg-secondary h-100 d-inline-flex align-items-center">
         {{tag}}
         <button
           type="button"

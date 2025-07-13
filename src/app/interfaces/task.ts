@@ -1,5 +1,5 @@
 export interface Task {
-    id: number;
+    taskId: number; 
     title: string;
     description: string;
     completed: boolean;
@@ -18,13 +18,11 @@ export interface TaskResponse {
 }
 
 export interface SaveTask {
-    id: number;
+    taskId: number;
     title: string;
     description: string;
     completed: boolean;
-    createdAt: Date;
-    updatedAt?: Date;
     dueDate?: Date;
-    priority?: 'low' | 'medium' | 'high';
+    priority?: 'Low' | 'Medium' | 'High';
     tags?: string[];
 }
